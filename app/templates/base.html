@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <meta name="description" content="Recognise your colleagues with kudos.">
+  <title>{% block title %}Kudos{% endblock %}</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Kudos home">
+        <span class="brand-mark" aria-hidden="true">✦</span>
+        <span>Kudos</span>
+      </a>
+      {% if user %}
+      <nav class="topbar-nav" aria-label="Account">
+        <span class="user-chip" title="{{ user.username }}">{{ user.display_name }}</span>
+        {% if user.role == 'admin' %}
+        <a class="nav-link" href="/admin">Moderation</a>
+        {% endif %}
+        <form method="post" action="/logout" class="signout-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="link-button">Sign out</button>
+        </form>
+      </nav>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

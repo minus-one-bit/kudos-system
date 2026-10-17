@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% from "partials/_kudos.html" import kudos_card %}
+{% block title %}Dashboard · Kudos{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Give kudos</h1>
+    <p class="muted">A short message of appreciation goes a long way.</p>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <section class="card composer" aria-labelledby="composer-heading">
+    <h2 id="composer-heading">Recognise a colleague</h2>
+
+    {% if users %}
+    {% if form_error %}
+    <div class="alert alert-error" role="alert">{{ form_error }}</div>
+    {% endif %}
+    <form id="kudos-form" method="post" action="/kudos" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="field">
+        <label for="recipient">Colleague</label>
+        <select id="recipient" name="recipient_id" required>
+          <option value="" disabled {% if not form_recipient_id %}selected{% endif %}>Choose a colleague…</option>
+          {% for colleague in users %}
+          <option value="{{ colleague.id }}"
+                  {% if form_recipient_id == colleague.id %}selected{% endif %}>
+            {{ colleague.display_name }} (@{{ colleague.username }})
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="4"
+                  maxlength="{{ max_message_length }}" required
+                  placeholder="Thanks for…">{{ form_message or "" }}</textarea>
+      </div>
+
+      <div class="composer-meta">
+        <span id="char-counter" class="muted" aria-live="polite">0 / {{ max_message_length }}</span>
+        <button type="submit" class="primary">Send kudos</button>
+      </div>
+
+      <p id="form-status" class="status" role="status" aria-live="polite"></p>
+    </form>
+    {% else %}
+    <p class="empty">There are no other active colleagues to recognise right now.</p>
+    {% endif %}
+  </section>
+
+  <section class="card feed-panel" aria-labelledby="feed-heading">
+    <div class="feed-header">
+      <h2 id="feed-heading">Recent kudos</h2>
+      <span class="muted">{{ total }} total</span>
+    </div>
+
+    <div id="feed" class="feed" data-total="{{ total }}" data-limit="{{ page_size }}">
+      {% for item in kudos %}
+      {{ kudos_card(item) }}
+      {% endfor %}
+    </div>
+
+    {% if not kudos %}
+    <p id="empty-state" class="empty">No kudos yet — be the first to recognise someone.</p>
+    {% endif %}
+
+    <button id="load-more" type="button" class="secondary load-more"
+            {% if total <= page_size %}hidden{% endif %}>Load more</button>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/app.js" defer></script>
+{% endblock %}

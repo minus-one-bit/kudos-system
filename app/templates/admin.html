@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Moderation · Kudos{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Moderation</h1>
+    <p class="muted">Review, hide, or remove kudos. Every action is recorded in the audit log.</p>
+  </div>
+  <span class="muted">{{ total }} total</span>
+</div>
+
+<section class="card">
+  {% if kudos %}
+  <div class="table-wrap">
+    <table class="moderation-table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Kudos</th>
+          <th scope="col">Status</th>
+          <th scope="col">Moderation</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in kudos %}
+        <tr>
+          <td class="mono">#{{ item.id }}</td>
+          <td>
+            <p class="kudos-meta">
+              <strong>{{ item.sender.display_name }}</strong>
+              <span class="arrow" aria-hidden="true">→</span>
+              <strong>{{ item.recipient.display_name }}</strong>
+              <time datetime="{{ item.created_at }}">{{ item.created_at_display }}</time>
+            </p>
+            <p class="kudos-message">{{ item.message }}</p>
+          </td>
+          <td>
+            {% if item.is_deleted %}
+            <span class="badge badge-deleted">Deleted</span>
+            {% elif not item.is_visible %}
+            <span class="badge badge-hidden">Hidden</span>
+            {% else %}
+            <span class="badge badge-visible">Visible</span>
+            {% endif %}
+          </td>
+          <td class="moderation-meta">
+            {% if item.moderated_by %}
+            <span>{{ item.moderated_by.display_name }}</span>
+            <span class="muted">{{ item.moderated_at_display }}</span>
+            {% if item.reason_for_moderation %}
+            <span class="reason">“{{ item.reason_for_moderation }}”</span>
+            {% endif %}
+            {% else %}
+            <span class="muted">—</span>
+            {% endif %}
+          </td>
+          <td class="actions">
+            {% if not item.is_deleted %}
+              {% if item.is_visible %}
+              <button type="button" class="small danger-ghost"
+                      data-kudos-id="{{ item.id }}"
+                      data-moderation-action="hide">Hide</button>
+              {% else %}
+              <button type="button" class="small"
+                      data-kudos-id="{{ item.id }}"
+                      data-moderation-action="unhide">Unhide</button>
+              {% endif %}
+              <button type="button" class="small danger"
+                      data-kudos-id="{{ item.id }}"
+                      data-moderation-action="delete">Delete</button>
+            {% else %}
+            <span class="muted">No actions</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">No kudos have been submitted yet.</p>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/app.js" defer></script>
+{% endblock %}

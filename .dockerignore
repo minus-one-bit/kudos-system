@@ -1,0 +1,10 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+kudos.db
+kudos.db-wal
+kudos.db-shm
+.pytest_cache
+tests

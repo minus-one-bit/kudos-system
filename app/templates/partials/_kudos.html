@@ -1,0 +1,11 @@
+{% macro kudos_card(item) %}
+<article class="kudos-card">
+  <p class="kudos-meta">
+    <strong>{{ item.sender.display_name }}</strong>
+    <span class="arrow" aria-hidden="true">→</span>
+    <strong>{{ item.recipient.display_name }}</strong>
+    <time datetime="{{ item.created_at }}">{{ item.created_at_display }}</time>
+  </p>
+  <p class="kudos-message">{{ item.message }}</p>
+</article>
+{% endmacro %}

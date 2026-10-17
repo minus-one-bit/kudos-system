@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Sign in · Kudos{% endblock %}
+
+{% block content %}
+<section class="auth-shell">
+  <div class="card auth-card">
+    <h1>Welcome to Kudos</h1>
+    <p class="muted">Sign in with your internal account to recognise a colleague.</p>
+
+    {% if error %}
+    <div class="alert alert-error" role="alert">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="/login" class="stack">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" value="{{ username }}"
+               autocomplete="username" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+               autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="primary">Sign in</button>
+    </form>
+
+    <p class="hint">
+      Demo accounts: <code>alice / alice123!</code>,
+      <code>bob / bob123!</code>, <code>admin / admin123!</code>
+    </p>
+  </div>
+</section>
+{% endblock %}
