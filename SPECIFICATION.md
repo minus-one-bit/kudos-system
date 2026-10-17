@@ -7,6 +7,7 @@
 | **Owner** | Graduate Developer, Datacom Internal Tools |
 | **Last updated** | 2026-10-17 |
 | **Scope** | Internal employee portal feature: peer-to-peer recognition |
+| **Repository** | https://github.com/minus-one-bit/kudos-system |
 
 ---
 
